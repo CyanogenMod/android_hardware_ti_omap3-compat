@@ -2322,6 +2322,7 @@ OMX_ERRORTYPE AACENCLCML_Callback(TUsnCodecEvent event,void * args [10])
     AACENC_COMPONENT_PRIVATE *pComponentPrivate_CC = NULL;
     OMX_S16 i = 0;
     int j =0, k=0 ;
+    OMX_TICKS bufferDuration =0;
 
 #ifdef RESOURCE_MANAGER_ENABLED 
     OMX_ERRORTYPE rm_error = OMX_ErrorNone;
@@ -2484,7 +2485,11 @@ pHandle = pComponentPrivate_CC->pHandle;
 /* Previously in HandleDatabuffer form LCML */
 
         /* Copying time stamp information to output buffer */
-        pLcmlHdr->buffer->nTimeStamp = (OMX_TICKS)pComponentPrivate_CC->timestampBufIndex[pComponentPrivate_CC->OpBufindex];
+        pLcmlHdr->buffer->nTimeStamp = pComponentPrivate_CC->temp_TS;
+        bufferDuration = ((pLcmlHdr->pOpParam->unNumFramesEncoded) * 1024 * 1000000) /
+                                              pComponentPrivate_CC->ulSamplingRate;
+        /* Update time stamp information */
+        pComponentPrivate_CC->temp_TS += bufferDuration;
         pLcmlHdr->buffer->nTickCount = pComponentPrivate_CC->tickcountBufIndex[pComponentPrivate_CC->OpBufindex];
         pComponentPrivate_CC->OpBufindex++;
         pComponentPrivate_CC->OpBufindex %= pComponentPrivate_CC->pPortDef[OMX_DirOutput]->nBufferCountActual;

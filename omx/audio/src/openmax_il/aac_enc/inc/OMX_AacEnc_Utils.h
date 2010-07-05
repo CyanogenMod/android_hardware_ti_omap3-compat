@@ -584,7 +584,9 @@ typedef struct AACENC_COMPONENT_PRIVATE
 
     /** Keep buffer tickcount **/
     OMX_U32 tickcountBufIndex[MAX_NUM_OF_BUFS];
-    
+
+    OMX_TICKS temp_TS;
+
     struct OMX_TI_Debug dbg;
 
     /* Reference count for pending state change requests */

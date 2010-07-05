@@ -323,6 +323,9 @@ OMX_ERRORTYPE OMX_ComponentInit (OMX_HANDLETYPE hComp)
     pComponentPrivate->PendingInPausedBufs          = 0;
     pComponentPrivate->PendingOutPausedBufs         = 0;
 
+    /*Timestamp calculation holding variable*/
+    pComponentPrivate->temp_TS = 0;
+
     /* Port format type */
     pComponentPrivate->sOutPortFormat.eEncoding     = OMX_AUDIO_CodingAAC;
     pComponentPrivate->sOutPortFormat.nIndex        = 0;/*OMX_IndexParamAudioAac;*/
