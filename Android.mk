@@ -13,6 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+ifneq ($(OMAP_ENHANCEMENT),true)
 ifeq ($(TARGET_BOARD_PLATFORM),omap3)
   include $(all-subdir-makefiles)
+endif
 endif

@@ -24,7 +24,7 @@ LOCAL_SHARED_LIBRARIES:= \
 LOCAL_C_INCLUDES += \
     frameworks/base/include/camera \
     frameworks/base/include/binder \
-    hardware/ti/omap3/liboverlay
+    hardware/ti/omap3-compat/liboverlay
 
 LOCAL_CFLAGS += -fno-short-enums 
 
@@ -36,11 +36,11 @@ LOCAL_SRC_FILES += \
     JpegEncoderEXIF.cpp \
 
 LOCAL_C_INCLUDES += \
-    hardware/ti/omap3/dspbridge/api/inc \
-    hardware/ti/omap3/omx/system/src/openmax_il/lcml/inc \
-    hardware/ti/omap3/omx/system/src/openmax_il/omx_core/inc \
-    hardware/ti/omap3/omx/system/src/openmax_il/common/inc \
-    hardware/ti/omap3/omx/image/src/openmax_il/jpeg_enc/inc \
+    hardware/ti/omap3-compat/dspbridge/api/inc \
+    hardware/ti/omap3-compat/omx/system/src/openmax_il/lcml/inc \
+    hardware/ti/omap3-compat/omx/system/src/openmax_il/omx_core/inc \
+    hardware/ti/omap3-compat/omx/system/src/openmax_il/common/inc \
+    hardware/ti/omap3-compat/omx/image/src/openmax_il/jpeg_enc/inc \
     external/libexif
 
 LOCAL_CFLAGS += -O0 -g3 -fpic -fstrict-aliasing -DIPP_LINUX -D___ANDROID___ -DHARDWARE_OMX
@@ -64,8 +64,8 @@ endif
 ifdef FW3A
 
 LOCAL_C_INCLUDES += \
-    hardware/ti/omap3/fw3A/include/ \
-	hardware/ti/omap3/fw3A/include/fw/api/linux/
+    hardware/ti/omap3-compat/fw3A/include/ \
+	hardware/ti/omap3-compat/fw3A/include/fw/api/linux/
 
 LOCAL_SHARED_LIBRARIES += \
     libdl \
@@ -79,8 +79,8 @@ endif
 ifdef IMAGE_PROCESSING_PIPELINE
 
 LOCAL_C_INCLUDES += \
-	hardware/ti/omap3/mm_isp/ipp/inc \
-	hardware/ti/omap3/mm_isp/capl/inc \
+	hardware/ti/omap3-compat/mm_isp/ipp/inc \
+	hardware/ti/omap3-compat/mm_isp/capl/inc \
 
 LOCAL_SHARED_LIBRARIES += \
     libcapl \

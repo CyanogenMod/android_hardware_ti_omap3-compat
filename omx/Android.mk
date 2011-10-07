@@ -5,7 +5,7 @@ LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
 
-TI_BRIDGE_INCLUDES := hardware/ti/omap3/dspbridge/inc
+TI_BRIDGE_INCLUDES := hardware/ti/omap3-compat/dspbridge/inc
 
 OMX_DEBUG := 0
 RESOURCE_MANAGER_ENABLED := 0

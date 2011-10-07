@@ -7,7 +7,7 @@ include $(CLEAR_VARS)
 include external/opencore/Config.mk
 LOCAL_C_INCLUDES := \
     $(PV_INCLUDES) \
-    hardware/ti/omap3/liboverlay
+    hardware/ti/omap3-compat/liboverlay
 
 LOCAL_SRC_FILES := \
 	android_surface_output_omap34xx.cpp buffer_alloc_omap34xx.cpp
