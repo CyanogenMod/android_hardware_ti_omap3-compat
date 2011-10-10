@@ -1,3 +1,4 @@
+
 /*
  * Copyright (C) Texas Instruments - http://www.ti.com/
  *
@@ -24,43 +25,45 @@
 *  Use of this software is controlled by the terms and conditions found
 *  in the license agreement under which this software has been supplied.
 * ============================================================================ */
-/*
-TODO:
 
-Memcpy into bm upon receiving fillbufferdone
+#ifndef SKIAHW_ENCODER_H
+#define SKIAHW_ENCODER_H
 
-Replace Allocate Buffer with UseBuffer(using bm) for output buffer.
-
-Better Error handling
-*/
-
-#include <stdio.h>
 #include <string.h>
+#include <time.h>
+#include "SkBitmap.h"
+#include "SkStream.h"
+#include "SkImageEncoder.h"
+#include "SkImageUtility.h"
+#include <stdio.h>
 #include <semaphore.h>
-
-#include <utils/Log.h>
-#include "JpegEncoderEXIF.h"
-#include <OMX_JpegEnc_CustomCmd.h>
+#include <utils/threads.h>
 
 extern "C" {
     #include "OMX_Component.h"
     #include "OMX_IVCommon.h"
 }
 
-class JpegEncoder
+#define OPTIMIZE 1
+#define WVGA_RESOLUTION (854*480)
+
+class SkJPEGImageEncoder : public SkImageEncoder {
+protected:
+virtual bool onEncode(SkWStream* stream, const SkBitmap& bm, int quality);
+};
+
+class SkTIJPEGImageEncoder
 {
-
 public:
-
     enum JPEGENC_State
     {
-        STATE_LOADED,                                   // 0
-        STATE_IDLE,                                         // 1
-        STATE_EXECUTING,                              // 2
-        STATE_FILL_BUFFER_DONE_CALLED,      // 3
-        STATE_EMPTY_BUFFER_DONE_CALLED,     // 4
-        STATE_ERROR,                                        // 5
-        STATE_EXIT                                             // 6
+        STATE_LOADED,
+        STATE_IDLE,
+        STATE_EXECUTING,
+        STATE_FILL_BUFFER_DONE_CALLED,
+        STATE_EMPTY_BUFFER_DONE_CALLED,
+        STATE_ERROR,
+        STATE_EXIT
     };
 
     typedef struct JpegEncoderParams
@@ -80,28 +83,29 @@ public:
         //nCropHeight
     }JpegEncoderParams;
 
-    int jpegSize;
     sem_t *semaphore;
     JPEGENC_State iState;
     JPEGENC_State iLastState;
-    exif_buffer *mexif_buf;
-    int thumb_width, thumb_height;
+    int jpegSize;
 
-    ~JpegEncoder();
-    JpegEncoder();
-    bool encodeImage(void* outputBuffer, int outBuffSize, void *inputBuffer, int inBuffSize, int width, int height,
-            int quality, exif_buffer *exif_buf, int mIsPixelFmt420p, int thumb_width, int thumb_height, int outWidth, int outHeight,
-            int rotation, float zoom, int crop_top, int crop_left, int crop_width, int crop_height);
+    SkTIJPEGImageEncoder();
+    void _SkTIJPEGImageEncoder();
+    ~SkTIJPEGImageEncoder();
+    bool onEncode(SkImageEncoder* enc_impl, SkWStream* stream, const SkBitmap& bm, int quality);
+    bool encodeImage(int outBuffSize, void *inputBuffer, int inBuffSize, int width, int height, int quality, SkBitmap::Config config);
     bool SetJpegEncodeParameters(JpegEncoderParams * jep) {memcpy(&jpegEncParams, jep, sizeof(JpegEncoderParams)); return true;}
     void Run();
     void PrintState();
     void FillBufferDone(OMX_U8* pBuffer, OMX_U32 size);
-    bool StartFromLoadedState();
     void EventHandler(OMX_HANDLETYPE hComponent,
                                             OMX_EVENTTYPE eEvent,
                                             OMX_U32 nData1,
                                             OMX_U32 nData2,
                                             OMX_PTR pEventData);
+    int GetLoad(){ return mLoad; }
+    void IncDeleteAttempts() {mDeleteAttempts++;}
+    void ResetDeleteAttempts() {mDeleteAttempts = 0;}
+    int GetDeleteAttempts() {return mDeleteAttempts;}
 
 private:
 
@@ -111,24 +115,14 @@ private:
     OMX_PARAM_PORTDEFINITIONTYPE InPortDef;
     OMX_PARAM_PORTDEFINITIONTYPE OutPortDef;
     JpegEncoderParams jpegEncParams;
-    void* mOutputBuffer;
-    int mOutBuffSize;
-    void *mInputBuffer;
-    int mInBuffSize;
-    int mInWidth;
-    int mInHeight;
-    int mQuality;
-	int mIsPixelFmt420p;
-    int mOutWidth;
-    int mOutHeight;
-    int mRotation;
-    float mZoom;
-    int mCrop_top;
-    int mCrop_left;
-    int mCrop_width;
-    int mCrop_height;
-    OMX_ERRORTYPE SetPPLibDynamicParams(void);
-    OMX_ERRORTYPE SetExifBuffer(void);
+    OMX_U8* pEncodedOutputBuffer;
+    OMX_U32 nEncodedOutputFilledLen;
+    android::Mutex gTIJpegEncMutex;
+    int mLoad;
+    int mDeleteAttempts;
+
+     bool onEncodeSW(SkWStream* stream, const SkBitmap& bm, int quality);
+
 };
 
 OMX_ERRORTYPE OMX_JPEGE_FillBufferDone (OMX_HANDLETYPE hComponent, OMX_PTR ptr, OMX_BUFFERHEADERTYPE* pBuffHead);
@@ -139,4 +133,4 @@ OMX_ERRORTYPE OMX_JPEGE_EventHandler(OMX_HANDLETYPE hComponent,
                                             OMX_U32 nData1,
                                             OMX_U32 nData2,
                                             OMX_PTR pEventData);
-
+#endif
