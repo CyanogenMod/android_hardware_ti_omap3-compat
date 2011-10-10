@@ -24,24 +24,9 @@
 #include <hardware/overlay.h>
 #include "v4l2_utils.h"
 
-#ifdef TARGET_OMAP4
-/*This is required to acheive the best performance for ducati codecs.
-* this will break arm based video codecs, and is acceptable as ducati codecs are
-* enabled in the system bydefault.
-*/
-#define NUM_BUFFERS_TO_BE_QUEUED_FOR_OPTIMAL_PERFORMANCE    2
-#define NUM_OVERLAY_BUFFERS_REQUESTED  (2)
-/* These values should come from Surface Flinger */
-#define LCD_WIDTH 864
-#define LCD_HEIGHT 480
-#define MAX_NUM_OVERLAYS 3
-#define FULLHD_WIDTH 1920
-#define FULLHD_HEIGHT 1080
-#define NUM_OVERLAY_BUFFERS_MAX (32)
-
-#else
 #define NUM_BUFFERS_TO_BE_QUEUED_FOR_OPTIMAL_PERFORMANCE    3
 #define NUM_OVERLAY_BUFFERS_REQUESTED  (6)
+
 /* These values should come from Surface Flinger */
 #define LCD_WIDTH 800
 #define LCD_HEIGHT 480
@@ -50,7 +35,6 @@
 #define MAX_NUM_OVERLAYS 2
 #define NUM_OVERLAY_BUFFERS_MAX NUM_OVERLAY_BUFFERS_REQUESTED
 
-#endif
 /** As the PV ARM Codecs are using only two output buffers, we can't have
 * more than 2 buffers queued in the DSS queue
 */
@@ -61,15 +45,6 @@
 #define MAINTAIN_COHERENCY 0x2
 #define OPTIMAL_QBUF_CNT    0x4
 
-#ifdef TARGET_OMAP4
-/* The following defines are used to set the maximum values supported
- * by the overlay.
- * 1080p is the max resolution currently supported (1920x1080) + some padding
- * */
-#define MAX_OVERLAY_WIDTH_VAL (2400)
-#define MAX_OVERLAY_HEIGHT_VAL (2048)
-#define MAX_OVERLAY_RESOLUTION ((2048) * (2048))
-#else
 /* The following defines are used to set the maximum values supported
  * by the overlay.
  * 720p is the max resolution currently supported (1280x720)
@@ -78,7 +53,6 @@
 #define MAX_OVERLAY_WIDTH_VAL (1280)
 #define MAX_OVERLAY_HEIGHT_VAL (1280)
 #define MAX_OVERLAY_RESOLUTION (1280 * 720)
-#endif
 
 #endif  // OVERLAY_COMMON_H_
 
