@@ -4138,10 +4138,10 @@ void OMX_VIDENC_ResourceManagerCallBack(RMPROXY_COMMANDDATATYPE cbData)
         pCompPrivate->sCbData.EventHandler (
                             pHandle, pHandle->pApplicationPrivate,
                             OMX_EventError,
-                           OMX_ErrorResourcesPreempted,OMX_TI_ErrorMinor,
+                            OMX_ErrorResourcesPreempted,OMX_TI_ErrorMinor,
                             "Componentn Preempted\n");
 
-            OMX_PRSTATE2(pCompPrivate->dbg, "Send command to Idle from RM CallBack\n");
+        OMX_PRSTATE2(pCompPrivate->dbg, "Send command to Idle from RM CallBack\n");
         OMX_SendCommand(pHandle, Cmd, state, NULL);
         pCompPrivate->bPreempted = 1;
 
@@ -4168,8 +4168,14 @@ void CalculateBufferSize(OMX_PARAM_PORTDEFINITIONTYPE* pCompPort, VIDENC_COMPONE
             pCompPort->nBufferSize = pCompPort->format.video.nFrameWidth *
                                     pCompPort->format.video.nFrameHeight * 1.5;
         }
-        else
-        {
+#ifdef INCREASE_WVGA_BUFSIZE
+        else if ((pCompPort->format.video.nFrameWidth >= 848) &&
+                 (pCompPort->format.video.nFrameHeight >= 480)) {
+            pCompPort->nBufferSize = pCompPort->format.video.nFrameWidth *
+                                    pCompPort->format.video.nFrameHeight * 2.5;
+        }
+#endif
+        else {
             pCompPort->nBufferSize = pCompPort->format.video.nFrameWidth *
                                     pCompPort->format.video.nFrameHeight * 2;
         }
