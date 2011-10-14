@@ -224,16 +224,6 @@ OMX_ERRORTYPE OMX_ComponentInit (OMX_HANDLETYPE hComp) {
 
     OMX_DBG_INIT(pComponentPrivate->dbg, "OMX_DBG_WBAMRENC");
 
-#ifdef ANDROID
-    pComponentPrivate->iPVCapabilityFlags.iIsOMXComponentMultiThreaded = OMX_TRUE;
-    pComponentPrivate->iPVCapabilityFlags.iOMXComponentNeedsNALStartCode = OMX_FALSE;
-    pComponentPrivate->iPVCapabilityFlags.iOMXComponentSupportsExternalOutputBufferAlloc = OMX_FALSE;
-    pComponentPrivate->iPVCapabilityFlags.iOMXComponentSupportsExternalInputBufferAlloc = OMX_FALSE;
-    pComponentPrivate->iPVCapabilityFlags.iOMXComponentSupportsMovableInputBuffers = OMX_FALSE;
-    pComponentPrivate->iPVCapabilityFlags.iOMXComponentSupportsPartialFrames = OMX_FALSE;
-    pComponentPrivate->iPVCapabilityFlags.iOMXComponentCanHandleIncompleteFrames = OMX_TRUE;
-#endif
-
 #ifdef __PERF_INSTRUMENTATION__
     pComponentPrivate->pPERF = PERF_Create(PERF_FOURCC('W', 'B', '_', 'E'),
                                            PERF_ModuleLLMM |
@@ -977,27 +967,6 @@ static OMX_ERRORTYPE GetParameter (OMX_HANDLETYPE hComp,
             }
 
             break;
-
-#ifdef ANDROID
-        case (OMX_INDEXTYPE) PV_OMX_COMPONENT_CAPABILITY_TYPE_INDEX: {
-            PV_OMXComponentCapabilityFlagsType* pCap_flags =
-                (PV_OMXComponentCapabilityFlagsType *) ComponentParameterStructure;
-            pCap_flags = (PV_OMXComponentCapabilityFlagsType *) ComponentParameterStructure;
-
-            if (NULL == pCap_flags) {
-                OMX_ERROR4(pComponentPrivate->dbg, "ERROR PV_OMX_COMPONENT_CAPABILITY_TYPE_INDEX");
-                eError =  OMX_ErrorBadParameter;
-                goto EXIT;
-            }
-
-            OMX_PRINT1(pComponentPrivate->dbg, "Copying PV_OMX_COMPONENT_CAPABILITY_TYPE_INDEX");
-            memcpy(pCap_flags,
-                   &(pComponentPrivate->iPVCapabilityFlags),
-                   sizeof(PV_OMXComponentCapabilityFlagsType));
-            eError = OMX_ErrorNone;
-        }
-        break;
-#endif
 
         case OMX_IndexParamVideoInit:
             break;

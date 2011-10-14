@@ -259,16 +259,6 @@ OMX_ERRORTYPE OMX_ComponentInit (OMX_HANDLETYPE hComp)
                                            PERF_ModuleAudioDecode);
 #endif
 
-
-        pComponentPrivate->iPVCapabilityFlags.iIsOMXComponentMultiThreaded = OMX_TRUE;
-        pComponentPrivate->iPVCapabilityFlags.iOMXComponentSupportsExternalOutputBufferAlloc = OMX_FALSE;
-        pComponentPrivate->iPVCapabilityFlags.iOMXComponentSupportsExternalInputBufferAlloc = OMX_FALSE;
-        pComponentPrivate->iPVCapabilityFlags.iOMXComponentSupportsMovableInputBuffers = OMX_FALSE;
-        pComponentPrivate->iPVCapabilityFlags.iOMXComponentSupportsPartialFrames = OMX_FALSE;
-        pComponentPrivate->iPVCapabilityFlags.iOMXComponentNeedsNALStartCode = OMX_FALSE;
-        pComponentPrivate->iPVCapabilityFlags.iOMXComponentCanHandleIncompleteFrames = OMX_FALSE;
-
-
     OMX_MALLOC_GENERIC(pComponentPrivate->pInputBufferList, NBAMRDEC_BUFFERLIST); 
     pComponentPrivate->pInputBufferList->numBuffers = 0; /* initialize number of buffers */
     OMX_MALLOC_GENERIC(pComponentPrivate->pOutputBufferList, NBAMRDEC_BUFFERLIST); 
@@ -900,67 +890,45 @@ static OMX_ERRORTYPE GetParameter (OMX_HANDLETYPE hComp,
 
         case OMX_IndexParamAudioPcm:
                 if(((OMX_AUDIO_PARAM_AMRTYPE *)(ComponentParameterStructure))->nPortIndex == NBAMRDEC_OUTPUT_PORT){
-                      memcpy(ComponentParameterStructure, pComponentPrivate->amrParams[NBAMRDEC_OUTPUT_PORT], sizeof(OMX_AUDIO_PARAM_PCMMODETYPE));
+                    memcpy(ComponentParameterStructure, pComponentPrivate->amrParams[NBAMRDEC_OUTPUT_PORT], sizeof(OMX_AUDIO_PARAM_PCMMODETYPE));
                 }
-                else {
-                      eError = OMX_ErrorBadPortIndex;
-               }
-               break;
+                else
+                    eError = OMX_ErrorBadPortIndex;
+                break;
 
-             
         case OMX_IndexParamPriorityMgmt:
-	     if (NULL == pComponentPrivate->pPriorityMgmt) {
-	         eError = OMX_ErrorBadParameter;
-	     }
-             else {
-                  memcpy(ComponentParameterStructure, pComponentPrivate->pPriorityMgmt, sizeof(OMX_PRIORITYMGMTTYPE));
-	     }
+                if (NULL == pComponentPrivate->pPriorityMgmt)
+                    eError = OMX_ErrorBadParameter;
+                else
+                    memcpy(ComponentParameterStructure, pComponentPrivate->pPriorityMgmt, sizeof(OMX_PRIORITYMGMTTYPE));
         break;
-            
+
         case OMX_IndexParamCompBufferSupplier:
-              if(((OMX_PARAM_BUFFERSUPPLIERTYPE *)(ComponentParameterStructure))->nPortIndex == OMX_DirInput) {
+                if(((OMX_PARAM_BUFFERSUPPLIERTYPE *)(ComponentParameterStructure))->nPortIndex == OMX_DirInput) {
                     OMX_PRBUFFER2(pComponentPrivate->dbg, ":: GetParameter OMX_IndexParamCompBufferSupplier \n");
-                    /*  memcpy(ComponentParameterStructure, pBufferSupplier, sizeof(OMX_PARAM_BUFFERSUPPLIERTYPE)); */                  
                 }
                 else if(((OMX_PARAM_BUFFERSUPPLIERTYPE *)(ComponentParameterStructure))->nPortIndex == OMX_DirOutput) {
                     OMX_PRBUFFER2(pComponentPrivate->dbg, ":: GetParameter OMX_IndexParamCompBufferSupplier \n");
-                    /*memcpy(ComponentParameterStructure, pBufferSupplier, sizeof(OMX_PARAM_BUFFERSUPPLIERTYPE)); */
-                } 
+                }
                 else {
                     OMX_PRINT2(pComponentPrivate->dbg, ":: OMX_ErrorBadPortIndex from GetParameter");
                     eError = OMX_ErrorBadPortIndex;
                 }
                 break;
-             
+
 
         case OMX_IndexParamVideoInit:
                 break;
 
-         case OMX_IndexParamImageInit:
+        case OMX_IndexParamImageInit:
                 break;
 
-         case OMX_IndexParamOtherInit:
-                break;
-
-        case (OMX_INDEXTYPE) PV_OMX_COMPONENT_CAPABILITY_TYPE_INDEX:
-        {
-        OMX_PRDSP1(pComponentPrivate->dbg, "Entering PV_OMX_COMPONENT_CAPABILITY_TYPE_INDEX::%d\n", __LINE__);
-            PV_OMXComponentCapabilityFlagsType* pCap_flags = (PV_OMXComponentCapabilityFlagsType *) ComponentParameterStructure;
-            if (NULL == pCap_flags)
-            {
-                OMX_ERROR4(pComponentPrivate->dbg, "%d :: ERROR PV_OMX_COMPONENT_CAPABILITY_TYPE_INDEX\n", __LINE__);
-                eError =  OMX_ErrorBadParameter;
-                goto EXIT;
-            }
-            OMX_PRDSP2(pComponentPrivate->dbg, "%d :: Copying PV_OMX_COMPONENT_CAPABILITY_TYPE_INDEX\n", __LINE__);
-            memcpy(pCap_flags, &(pComponentPrivate->iPVCapabilityFlags), sizeof(PV_OMXComponentCapabilityFlagsType));
-        eError = OMX_ErrorNone;
-        }
+        case OMX_IndexParamOtherInit:
                 break;
 
         default:
             eError = OMX_ErrorUnsupportedIndex;
-        
+
         break;
     }
 EXIT:
@@ -990,7 +958,7 @@ static OMX_ERRORTYPE SetParameter (OMX_HANDLETYPE hComp, OMX_INDEXTYPE nParamInd
     OMX_PARAM_COMPONENTROLETYPE  *pRole;
     OMX_AUDIO_PARAM_PCMMODETYPE *amr_op;
     OMX_PARAM_BUFFERSUPPLIERTYPE sBufferSupplier;
-    
+
     pComponentPrivate = (AMRDEC_COMPONENT_PRIVATE *)(((OMX_COMPONENTTYPE*)hComp)->pComponentPrivate);
 
     if (pCompParam == NULL) {
