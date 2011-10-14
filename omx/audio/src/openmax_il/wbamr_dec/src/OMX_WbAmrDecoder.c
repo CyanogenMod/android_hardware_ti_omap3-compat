@@ -255,16 +255,6 @@ OMX_ERRORTYPE OMX_ComponentInit (OMX_HANDLETYPE hComp)
                                            PERF_ModuleAudioDecode);
 #endif
 
-#ifdef ANDROID /* currently using default values until more is understood */
-    pComponentPrivate->iPVCapabilityFlags.iIsOMXComponentMultiThreaded = OMX_TRUE; /* this should be true always for TI components */
-    pComponentPrivate->iPVCapabilityFlags.iOMXComponentSupportsExternalOutputBufferAlloc = OMX_FALSE;
-    pComponentPrivate->iPVCapabilityFlags.iOMXComponentSupportsExternalInputBufferAlloc = OMX_FALSE;
-    pComponentPrivate->iPVCapabilityFlags.iOMXComponentSupportsMovableInputBuffers = OMX_FALSE; /* experiment with this */
-    pComponentPrivate->iPVCapabilityFlags.iOMXComponentSupportsPartialFrames = OMX_FALSE; /* experiment with this */
-    pComponentPrivate->iPVCapabilityFlags.iOMXComponentNeedsNALStartCode = OMX_FALSE; /* used only for H.264, leave this as false */
-    pComponentPrivate->iPVCapabilityFlags.iOMXComponentCanHandleIncompleteFrames = OMX_FALSE; /* experiment with this */
-#endif
-
     OMX_MALLOC_GENERIC(pComponentPrivate->pInputBufferList, WBAMR_DEC_BUFFERLIST);
     pComponentPrivate->pInputBufferList->numBuffers = 0; /* initialize number of buffers */
     OMX_MALLOC_GENERIC(pComponentPrivate->pOutputBufferList, WBAMR_DEC_BUFFERLIST);
@@ -913,21 +903,6 @@ static OMX_ERRORTYPE GetParameter (OMX_HANDLETYPE hComp,
         break;
 
     case OMX_IndexParamOtherInit:
-        break;
-    case (OMX_INDEXTYPE) PV_OMX_COMPONENT_CAPABILITY_TYPE_INDEX:
-        {
-            OMX_PRINT2(pComponentPrivate->dbg, "Entering PV_OMX_COMPONENT_CAPABILITY_TYPE_INDEX\n");
-            PV_OMXComponentCapabilityFlagsType* pCap_flags = (PV_OMXComponentCapabilityFlagsType *) ComponentParameterStructure;
-            if (NULL == pCap_flags)
-            {
-                OMX_ERROR4(pComponentPrivate->dbg, "ERROR PV_OMX_COMPONENT_CAPABILITY_TYPE_INDEX\n");
-                eError =  OMX_ErrorBadParameter;
-                goto EXIT;
-            }
-            OMX_PRINT2(pComponentPrivate->dbg, "Copying PV_OMX_COMPONENT_CAPABILITY_TYPE_INDEX\n");
-            memcpy(pCap_flags, &(pComponentPrivate->iPVCapabilityFlags), sizeof(PV_OMXComponentCapabilityFlagsType));
-            eError = OMX_ErrorNone;
-        }
         break;
 
     default:
