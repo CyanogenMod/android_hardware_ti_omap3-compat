@@ -365,7 +365,6 @@ OMX_ERRORTYPE OMX_ComponentInit (OMX_HANDLETYPE hComponent)
     OMX_MALLOC_STRUCT(pComponentPrivate->pH263, OMX_VIDEO_PARAM_H263TYPE,pComponentPrivate->nMemUsage[VIDDDEC_Enum_MemLevel0]);
     OMX_MALLOC_STRUCT(pComponentPrivate->pWMV, OMX_VIDEO_PARAM_WMVTYPE,pComponentPrivate->nMemUsage[VIDDDEC_Enum_MemLevel0]);
     OMX_MALLOC_STRUCT(pComponentPrivate->pDeblockingParamType, OMX_PARAM_DEBLOCKINGTYPE, pComponentPrivate->nMemUsage[VIDDDEC_Enum_MemLevel0]);
-    OMX_MALLOC_STRUCT(pComponentPrivate->pPVCapabilityFlags, PV_OMXComponentCapabilityFlagsType, pComponentPrivate->nMemUsage[VIDDDEC_Enum_MemLevel0]); 
 
     OMX_MALLOC_STRUCT_SIZED(pComponentPrivate->cComponentName, char, VIDDEC_MAX_NAMESIZE + 1,pComponentPrivate->nMemUsage[VIDDDEC_Enum_MemLevel0]);
     if (pComponentPrivate->cComponentName == NULL) {
@@ -689,16 +688,6 @@ static OMX_ERRORTYPE VIDDEC_SendCommand (OMX_HANDLETYPE hComponent,
                 eError = OMX_ErrorUndefined;
                 goto EXIT;
             }
-#ifdef ANDROID
-            /*Workaround version to handle pv app */
-            /*After ports is been flush*/
-
-            if (nParam1 == VIDDEC_INPUT_PORT && 
-                    pComponentPrivate->bDynamicConfigurationInProgress == OMX_TRUE &&
-                    pComponentPrivate->bInPortSettingsChanged == OMX_TRUE) {
-                VIDDEC_PTHREAD_MUTEX_SIGNAL(pComponentPrivate->sDynConfigMutex);
-            }
-#endif
             break;
         case OMX_CommandPortEnable:
             if (nParam1 == VIDDEC_INPUT_PORT) {
@@ -1124,14 +1113,6 @@ static OMX_ERRORTYPE VIDDEC_GetParameter (OMX_IN OMX_HANDLETYPE hComponent,
             memcpy(ComponentParameterStructure, pComponentPrivate->pDeblockingParamType, sizeof(OMX_PARAM_DEBLOCKINGTYPE));
             break;
         }
-#ifdef ANDROID
-        /* Opencore specific */
-        case (OMX_INDEXTYPE) PV_OMX_COMPONENT_CAPABILITY_TYPE_INDEX: /** Obtain the capabilities of the OMX component **/
-                memcpy(ComponentParameterStructure, pComponentPrivate->pPVCapabilityFlags, 
-                        sizeof(PV_OMXComponentCapabilityFlagsType));
-                eError = OMX_ErrorNone;
-            break;
-#endif
         default:
             eError = OMX_ErrorUnsupportedIndex;
             break;
@@ -2803,12 +2784,6 @@ static OMX_ERRORTYPE VIDDEC_ComponentDeInit(OMX_HANDLETYPE hComponent)
         free(pComponentPrivate->pDeblockingParamType);
         pComponentPrivate->pDeblockingParamType = NULL;
     }
-#ifdef ANDROID
-    if(pComponentPrivate->pPVCapabilityFlags != NULL) {
-        free(pComponentPrivate->pPVCapabilityFlags);
-        pComponentPrivate->pPVCapabilityFlags = NULL;
-    }
-#endif
     if(pComponentPrivate->cComponentName != NULL) {
         free(pComponentPrivate->cComponentName);
         pComponentPrivate->cComponentName = NULL;
