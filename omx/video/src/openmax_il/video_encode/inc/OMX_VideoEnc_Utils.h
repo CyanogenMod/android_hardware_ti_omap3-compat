@@ -119,24 +119,6 @@
 #define WVGA_MAX_WIDTH 854
 #define WVGA_MAX_HEIGHT WVGA_MAX_WIDTH
 
-/*
-* Definition of capabilities index and structure
-* Needed to inform OpenCore about component capabilities.
-*/
-#define PV_OMX_COMPONENT_CAPABILITY_TYPE_INDEX 0xFF7A347
-
-typedef struct PV_OMXComponentCapabilityFlagsType
-{
-    /* OMX COMPONENT CAPABILITY RELATED MEMBERS*/
-    OMX_BOOL iIsOMXComponentMultiThreaded;
-    OMX_BOOL iOMXComponentSupportsExternalOutputBufferAlloc;
-    OMX_BOOL iOMXComponentSupportsExternalInputBufferAlloc;
-    OMX_BOOL iOMXComponentSupportsMovableInputBuffers;
-    OMX_BOOL iOMXComponentSupportsPartialFrames;
-    OMX_BOOL iOMXComponentUsesNALStartCode;
-    OMX_BOOL iOMXComponentCanHandleIncompleteFrames;
-    OMX_BOOL iOMXComponentUsesFullAVCFrames;
-} PV_OMXComponentCapabilityFlagsType;
 
 /*
  * Redirects control flow in an error situation.
@@ -688,8 +670,9 @@ typedef struct VIDENC_COMPONENT_PRIVATE
     OMX_BOOL bPreempted;
     OMX_VIDEO_CODINGTYPE compressionFormats[3];
     OMX_COLOR_FORMATTYPE colorFormats[3];
+
     struct OMX_TI_Debug dbg;
-    PV_OMXComponentCapabilityFlagsType* pCapabilityFlags;
+
     /*Variables neded to manage the VOL header request*/
     MP4VE_GPP_SN_UALGInputParams* pTempUalgInpParams;
     OMX_BOOL bRequestVOLHeader;
