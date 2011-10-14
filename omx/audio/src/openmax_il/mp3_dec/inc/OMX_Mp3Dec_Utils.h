@@ -76,9 +76,6 @@
     #include <utils/Log.h>
     #undef LOG_TAG
     #define LOG_TAG "OMX_MP3"
-    
-    /* PV opencore capability custom parameter index */ 
-    #define PV_OMX_COMPONENT_CAPABILITY_TYPE_INDEX 0xFF7A347
 #endif
 
 #endif
@@ -257,22 +254,6 @@
     (_s_)->nVersion.s.nRevision = 0x1;          \
     (_s_)->nVersion.s.nStep = 0x0
 
-/* ======================================================================= */
-/** PV_OMXComponentCapabilityFlagsType: this communicates capabilities to opencore client
-* 
-*/
-/* ==================================================================== */
-typedef struct PV_OMXComponentCapabilityFlagsType
-{
-        ////////////////// OMX COMPONENT CAPABILITY RELATED MEMBERS (for opencore compatability)
-        OMX_BOOL iIsOMXComponentMultiThreaded;
-        OMX_BOOL iOMXComponentSupportsExternalOutputBufferAlloc;
-        OMX_BOOL iOMXComponentSupportsExternalInputBufferAlloc;
-        OMX_BOOL iOMXComponentSupportsMovableInputBuffers;
-        OMX_BOOL iOMXComponentSupportsPartialFrames;
-        OMX_BOOL iOMXComponentNeedsNALStartCode;
-        OMX_BOOL iOMXComponentCanHandleIncompleteFrames;
-} PV_OMXComponentCapabilityFlagsType;
 /* ======================================================================= */
 /** MP3D_COMP_PORT_TYPE: This enum is used by the OMX Component.
 * 
@@ -770,7 +751,6 @@ typedef struct MP3DEC_COMPONENT_PRIVATE
     /** Last buffer received usind in PV-Android context **/
     OMX_BUFFERHEADERTYPE *lastout;
 
-    PV_OMXComponentCapabilityFlagsType iPVCapabilityFlags;
     OMX_BOOL reconfigInputPort;
     OMX_BOOL reconfigOutputPort;
     OMX_BOOL bConfigData;

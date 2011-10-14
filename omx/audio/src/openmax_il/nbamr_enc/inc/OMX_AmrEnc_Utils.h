@@ -89,9 +89,6 @@
 #ifdef ANDROID
     #undef LOG_TAG
     #define LOG_TAG "OMX_NBAMRENC"
-//    #define LOG_TAG "nbamr_enc"
-    /* PV opencore capability custom parameter index */
-    #define PV_OMX_COMPONENT_CAPABILITY_TYPE_INDEX 0xFF7A347
 #endif
 
 /* ======================================================================= */
@@ -494,18 +491,6 @@ enum NBAMRENC_MimeMode {
 /* ======================================================================= */
 #define _ERROR_PROPAGATION__
 
-
-typedef struct PV_OMXComponentCapabilityFlagsType
-{
-        ////////////////// OMX COMPONENT CAPABILITY RELATED MEMBERS (for opencore compatability)
-        OMX_BOOL iIsOMXComponentMultiThreaded;
-        OMX_BOOL iOMXComponentSupportsExternalOutputBufferAlloc;
-        OMX_BOOL iOMXComponentSupportsExternalInputBufferAlloc;
-        OMX_BOOL iOMXComponentSupportsMovableInputBuffers;
-        OMX_BOOL iOMXComponentSupportsPartialFrames;
-        OMX_BOOL iOMXComponentNeedsNALStartCode;
-        OMX_BOOL iOMXComponentCanHandleIncompleteFrames;
-} PV_OMXComponentCapabilityFlagsType;
 /* ======================================================================= */
 /** NBAMRENC_COMP_PORT_TYPE  Port types
  *
@@ -925,7 +910,6 @@ typedef struct AMRENC_COMPONENT_PRIVATE
     
     OMX_PARAM_COMPONENTROLETYPE componentRole;
     OMX_U32 teeMode;
-    PV_OMXComponentCapabilityFlagsType iPVCapabilityFlags;
 
     struct OMX_TI_Debug dbg;
 

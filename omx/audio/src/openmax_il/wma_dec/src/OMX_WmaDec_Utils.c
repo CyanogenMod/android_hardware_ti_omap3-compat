@@ -1376,54 +1376,7 @@ OMX_ERRORTYPE WMADECHandleDataBuf_FromApp(OMX_BUFFERHEADERTYPE* pBufHeader,
                         goto EXIT;
                     }
                 }                               
-#ifdef ANDROID //this is used to separate changes made for integration with opencore 2.1 or later versions
 
-                /* check if the buffer contains config data, it should only be the case in the fist input buffer*/
-                if(pBufHeader->nFlags & OMX_BUFFERFLAG_CODECCONFIG){
-                    pComponentPrivate->bConfigData = 1; /* changed the if statement to use the buffer flag, now this flag doesnt do anything
-                                                           we will leave it for now incase it becomes useful */
-                    OMX_PRCOMM2(pComponentPrivate->dbg, "%d :: UTIL: Before parsing ",__LINE__);
-                    eError=WMADEC_Parser( pBufHeader->pBuffer,pComponentPrivate->rcaheader, pComponentPrivate->dbg);
-                    OMX_PRCOMM2(pComponentPrivate->dbg, "%d :: UTIL: After parsing ", __LINE__);
-                    if (eError != OMX_ErrorNone)
-                    {
-                        OMX_ERROR4(pComponentPrivate->dbg, "%d :: Error: Parsing invalid ...",__LINE__);
-                        goto EXIT;
-                    }                                   
-                    /*******************Updating if needed*********************/
-                    OMX_ERROR2(pComponentPrivate->dbg, "OLD: pComponentPrivate->wmaParams[OUTPUT_PORT]->nSamplingRate=%ld ",pComponentPrivate->wmaParams[OUTPUT_PORT]->nSamplingRate);
-                    /* if(pComponentPrivate->wma_op->nSamplingRate != iSamplePerSec){
-                       pComponentPrivate->wma_op->nSamplingRate=iSamplePerSec;
-                       pComponentPrivate->reconfigOutputPort=1;
-                       OMX_ERROR4(pComponentPrivate->dbg, "=================RECONFIGURATION NEEDED===============");
-                       OMX_ERROR4(pComponentPrivate->dbg, "NEW: pComponentPrivate->wmaParams[OUTPUT_PORT]->nSamplingRate=%d ",pComponentPrivate->wmaParams[OUTPUT_PORT]->nSamplingRate);
-                       }
-                       if(pComponentPrivate->wma_op->nChannels != iChannel){
-                       pComponentPrivate->wma_op->nChannels = iChannel;
-                       pComponentPrivate->reconfigOutputPort=1;
-                       OMX_ERROR4(pComponentPrivate->dbg, "=================RECONFIGURATION NEEDED===============");
-                       }
-                       if(pComponentPrivate->reconfigOutputPort){                    
-                       pComponentPrivate->cbInfo.EventHandler(pComponentPrivate->pHandle,
-                       pComponentPrivate->pHandle->pApplicationPrivate,
-                       OMX_EventPortSettingsChanged,
-                       OUTPUT_PORT,
-                       0,
-                       NULL);                        
-                       OMX_ERROR4(pComponentPrivate->dbg, "================= sent reconfig event to client==============="); */
-                    pBufHeader->nFilledLen = 0;
-                    pComponentPrivate->cbInfo.EmptyBufferDone (
-                                                               pComponentPrivate->pHandle,
-                                                               pComponentPrivate->pHandle->pApplicationPrivate,
-                                                               pBufHeader
-                                                               );
-                    pComponentPrivate->nEmptyBufferDoneCount++;
-
-                    // }
-                    pComponentPrivate->bConfigData = 0;
-                    goto EXIT;
-                }
-#endif
                 if( pComponentPrivate->dasfmode )
                 {
                     pComponentPrivate->pDynParams->iOutputFormat = WMA_IAUDIO_BLOCK; /* EAUDIO_BLOCKED */

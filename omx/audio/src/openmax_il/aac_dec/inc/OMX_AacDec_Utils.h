@@ -76,9 +76,6 @@
     /* Log for Android system*/
     #undef LOG_TAG
     #define LOG_TAG "OMX_AACDEC"
-
-    /* PV opencore capability custom parameter index */
-    #define PV_OMX_COMPONENT_CAPABILITY_TYPE_INDEX 0xFF7A347
 #endif
  
 #define OBJECTTYPE_LC 2
@@ -653,18 +650,6 @@ struct AAC_DEC_BUFFERLIST{
 
 typedef struct AAC_DEC_BUFFERLIST AACDEC_BUFFERLIST;
 
-typedef struct PV_OMXComponentCapabilityFlagsType
-{
-        ////////////////// OMX COMPONENT CAPABILITY RELATED MEMBERS (for opencore compatability)
-        OMX_BOOL iIsOMXComponentMultiThreaded;
-        OMX_BOOL iOMXComponentSupportsExternalOutputBufferAlloc;
-        OMX_BOOL iOMXComponentSupportsExternalInputBufferAlloc;
-        OMX_BOOL iOMXComponentSupportsMovableInputBuffers;
-        OMX_BOOL iOMXComponentSupportsPartialFrames;
-        OMX_BOOL iOMXComponentNeedsNALStartCode;
-        OMX_BOOL iOMXComponentCanHandleIncompleteFrames;
-} PV_OMXComponentCapabilityFlagsType;
-
 /* ======================================================================= */
 /** AACDEC_COMPONENT_PRIVATE: This is the major and main structure of the
  * component which contains all type of information of buffers, ports etc
@@ -931,7 +916,6 @@ typedef struct AACDEC_COMPONENT_PRIVATE
     /** Temporal time stamp **/
     OMX_TICKS temp_TS;
 
-    PV_OMXComponentCapabilityFlagsType iPVCapabilityFlags;
     OMX_BOOL bConfigData;
     OMX_BOOL reconfigInputPort;
     OMX_BOOL reconfigOutputPort;
