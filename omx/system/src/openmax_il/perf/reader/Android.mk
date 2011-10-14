@@ -24,7 +24,6 @@ endif
 LOCAL_C_INCLUDES := \
 	$(TI_OMX_SYSTEM)/perf/inc \
 	$(TI_OMX_INCLUDES) \
-	$(PV_INCLUDES) \
 	bionic/libc/include \
 
 LOCAL_SHARED_LIBRARIES := \
