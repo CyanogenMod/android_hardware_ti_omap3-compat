@@ -20,10 +20,6 @@
 #include "OMX_Core.h"
 #include "OMX_ComponentRegistry.h"
 
-#ifndef NO_OPENCORE
-/** determine capabilities of a component before acually using it */
-#include "ti_omx_config_parser.h"
-#endif
 
 /** size for the array of allocated components.  Sets the maximum 
  * number of components that can be allocated at once */
@@ -796,8 +792,5 @@ OMX_BOOL TIOMXConfigParserRedirect(
 
 {
     OMX_BOOL Status = OMX_FALSE;
-#ifndef NO_OPENCORE
-    Status = TIOMXConfigParser(aInputParameters, aOutputParameters);
-#endif
     return Status;
 }

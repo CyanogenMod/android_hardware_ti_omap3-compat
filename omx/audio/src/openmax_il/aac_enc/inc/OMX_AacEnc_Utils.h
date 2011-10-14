@@ -50,9 +50,6 @@
 #ifdef ANDROID
     #undef LOG_TAG
     #define LOG_TAG "OMX_AACENC"
-
-/* PV opencore capability custom parameter index */
-    #define PV_OMX_COMPONENT_CAPABILITY_TYPE_INDEX 0xFF7A347
 #endif
 
 #ifdef __PERF_INSTRUMENTATION__
@@ -158,19 +155,6 @@ typedef struct
     unsigned long unNumFramesEncoded;
     unsigned long unFrameSizes[MPEG4AACENC_MAX_OUTPUT_FRAMES];
 }AACENC_UAlgOutBufParamStruct;
-
-
-typedef struct PV_OMXComponentCapabilityFlagsType
-{
-        ////////////////// OMX COMPONENT CAPABILITY RELATED MEMBERS (for opencore compatability)
-        OMX_BOOL iIsOMXComponentMultiThreaded;
-        OMX_BOOL iOMXComponentSupportsExternalOutputBufferAlloc;
-        OMX_BOOL iOMXComponentSupportsExternalInputBufferAlloc;
-        OMX_BOOL iOMXComponentSupportsMovableInputBuffers;
-        OMX_BOOL iOMXComponentSupportsPartialFrames;
-        OMX_BOOL iOMXComponentNeedsNALStartCode;
-        OMX_BOOL iOMXComponentCanHandleIncompleteFrames;
-} PV_OMXComponentCapabilityFlagsType;
 
 /*This enum must not be changed.*/
 typedef enum COMP_PORT_TYPE 
@@ -601,8 +585,6 @@ typedef struct AACENC_COMPONENT_PRIVATE
     /** Keep buffer tickcount **/
     OMX_U32 tickcountBufIndex[MAX_NUM_OF_BUFS];
     
-    PV_OMXComponentCapabilityFlagsType iPVCapabilityFlags;
-
     struct OMX_TI_Debug dbg;
 
     /* Reference count for pending state change requests */

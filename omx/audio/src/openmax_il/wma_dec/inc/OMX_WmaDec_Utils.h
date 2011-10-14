@@ -66,9 +66,6 @@
 #ifdef ANDROID
     #undef LOG_TAG
     #define LOG_TAG "OMX_WMADEC"
-
-/* PV opencore capability custom parameter index */
-    #define PV_OMX_COMPONENT_CAPABILITY_TYPE_INDEX 0xFF7A347
 #endif
 
 #ifdef UNDER_CE
@@ -93,9 +90,6 @@ typedef struct OMXBufferStatus /*BUFFERSTATUS*/
 } OMXBufferStatus;
 
 #endif
-
-/* PV opencore capability custom parameter index */
-#define PV_OMX_COMPONENT_CAPABILITY_TYPE_INDEX 0xFF7A347
 
 #ifndef ANDROID
 #define ANDROID
@@ -557,18 +551,6 @@ struct _BUFFERLIST{
     OMX_U8 EosFlagSent;
 };
 
-
-typedef struct PV_OMXComponentCapabilityFlagsType
-{
-    ////////////////// OMX COMPONENT CAPABILITY RELATED MEMBERS (for opencore compatability)
-    OMX_BOOL iIsOMXComponentMultiThreaded;
-    OMX_BOOL iOMXComponentSupportsExternalOutputBufferAlloc;
-    OMX_BOOL iOMXComponentSupportsExternalInputBufferAlloc;
-    OMX_BOOL iOMXComponentSupportsMovableInputBuffers;
-    OMX_BOOL iOMXComponentSupportsPartialFrames;
-    OMX_BOOL iOMXComponentNeedsNALStartCode;
-    OMX_BOOL iOMXComponentCanHandleIncompleteFrames;
-} PV_OMXComponentCapabilityFlagsType;
 /* =================================================================================== */
 /**
  *  RCA_HEADER. Rca data that goes to SN with the first data packet received from test app.
@@ -860,7 +842,6 @@ typedef struct WMADEC_COMPONENT_PRIVATE
     OMX_U32 app_nBuf;
     OMX_U32 num_Reclaimed_Op_Buff;
     
-    PV_OMXComponentCapabilityFlagsType iPVCapabilityFlags;
     OMX_BOOL reconfigInputPort;     
     OMX_BOOL reconfigOutputPort;    
     OMX_BOOL bConfigData;           
