@@ -584,10 +584,6 @@ sDynamicFormat = getenv("FORMAT");
                   sizeof(OMX_VIDEO_PARAM_MOTIONVECTORTYPE),
                   OMX_VIDEO_PARAM_MOTIONVECTORTYPE,
                   pMemoryListHead, dbg);
-    VIDENC_MALLOC(pComponentPrivate->pCapabilityFlags,
-                  sizeof(PV_OMXComponentCapabilityFlagsType),
-                  PV_OMXComponentCapabilityFlagsType,
-                  pMemoryListHead, dbg);
 
     /* Set pPortParamType defaults */
     OMX_CONF_INIT_STRUCT(pComponentPrivate->pPortParamType, OMX_PORT_PARAM_TYPE);
@@ -934,23 +930,6 @@ sDynamicFormat = getenv("FORMAT");
     pCompPortOut->pBitRateType->eControlRate = OMX_Video_ControlRateConstant;
     pCompPortOut->pBitRateType->nTargetBitrate = pCompPortOut->pBitRateTypeConfig->nEncodeBitrate;
 
-    /*set the capability Flags needed by Opencore*/
-    pComponentPrivate->pCapabilityFlags->iIsOMXComponentMultiThreaded=OMX_TRUE;
-    pComponentPrivate->pCapabilityFlags->iOMXComponentCanHandleIncompleteFrames=OMX_FALSE;
-    pComponentPrivate->pCapabilityFlags->iOMXComponentSupportsExternalInputBufferAlloc=OMX_FALSE;
-    pComponentPrivate->pCapabilityFlags->iOMXComponentSupportsExternalOutputBufferAlloc=OMX_FALSE;
-    pComponentPrivate->pCapabilityFlags->iOMXComponentSupportsMovableInputBuffers=OMX_TRUE;
-    pComponentPrivate->pCapabilityFlags->iOMXComponentSupportsPartialFrames=OMX_FALSE;
-    pComponentPrivate->pCapabilityFlags->iOMXComponentUsesFullAVCFrames=OMX_FALSE;
-    pComponentPrivate->pCapabilityFlags->iOMXComponentUsesNALStartCode=OMX_FALSE;
-    pComponentPrivate->nLastUpdateTime = 0;
-    pComponentPrivate->nFrameRateUpdateInterval = 60;
-    pComponentPrivate->nFrameCount = 0;
-    pComponentPrivate->nVideoTime = 0;
-    pComponentPrivate->EmptybufferdoneCount = 0;
-    pComponentPrivate->EmptythisbufferCount = 0;
-    pComponentPrivate->FillbufferdoneCount  = 0;
-    pComponentPrivate->FillthisbufferCount  = 0;
 #ifndef UNDER_CE
     /* Initialize Mutex for Buffer Tracking */
     pthread_mutex_init(&(pComponentPrivate->mVideoEncodeBufferMutex), NULL);
@@ -1779,15 +1758,6 @@ static OMX_ERRORTYPE GetParameter (OMX_IN OMX_HANDLETYPE hComponent,
        case VideoEncodeCustomParamIndexNALFormat:
            (*((unsigned int*)ComponentParameterStructure)) = (unsigned int)pComponentPrivate->AVCNALFormat;
            break;
-       case PV_OMX_COMPONENT_CAPABILITY_TYPE_INDEX:
-            pTmp = memcpy(ComponentParameterStructure,
-            pComponentPrivate->pCapabilityFlags,
-            sizeof(PV_OMXComponentCapabilityFlagsType));
-            if (pTmp == NULL)
-            {
-                OMX_CONF_SET_ERROR_BAIL(eError, OMX_ErrorUndefined);
-            }
-            break;
        //not supported yet
        case OMX_IndexConfigCommonRotate:
            break;
