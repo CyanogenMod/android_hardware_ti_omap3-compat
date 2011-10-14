@@ -1084,54 +1084,6 @@ OMX_ERRORTYPE VIDDEC_Load_Defaults (VIDDEC_COMPONENT_PRIVATE* pComponentPrivate,
             pComponentPrivate->pBufferTemp.nFilledLen = sizeof(VIDDEC_WMV_RCV_header);
             pComponentPrivate->pBufferTemp.nAllocLen = sizeof(VIDDEC_WMV_RCV_header);
 
-#ifdef ANDROID
-            /*Set PV (opencore) capability flags*/
-            pComponentPrivate->pPVCapabilityFlags->iIsOMXComponentMultiThreaded = OMX_TRUE;
-            pComponentPrivate->pPVCapabilityFlags->iOMXComponentSupportsExternalOutputBufferAlloc = OMX_TRUE;
-            pComponentPrivate->pPVCapabilityFlags->iOMXComponentSupportsExternalInputBufferAlloc = OMX_FALSE;
-            pComponentPrivate->pPVCapabilityFlags->iOMXComponentSupportsMovableInputBuffers = OMX_FALSE;
-            pComponentPrivate->pPVCapabilityFlags->iOMXComponentSupportsPartialFrames = OMX_FALSE;
-            pComponentPrivate->pPVCapabilityFlags->iOMXComponentCanHandleIncompleteFrames = OMX_FALSE;
-
-
-            if (pComponentPrivate->ProcessMode == 0 && pComponentPrivate->H264BitStreamFormat == 0) {
-                /* frame mode + bytestream */
-                pComponentPrivate->pPVCapabilityFlags->iOMXComponentUsesNALStartCodes = OMX_TRUE;
-            }
-            else if (pComponentPrivate->ProcessMode == 0 && pComponentPrivate->H264BitStreamFormat >= 1) {
-                /* frame mode + NAL-bitstream */
-                pComponentPrivate->pPVCapabilityFlags->iOMXComponentUsesNALStartCodes = OMX_FALSE;
-            }
-            else if (pComponentPrivate->ProcessMode == 1 && pComponentPrivate->H264BitStreamFormat == 0) {
-                /* stream mode + bytestream */
-                pComponentPrivate->pPVCapabilityFlags->iOMXComponentUsesNALStartCodes = OMX_TRUE;
-            }
-            else if (pComponentPrivate->ProcessMode == 1 && pComponentPrivate->H264BitStreamFormat >= 1) {
-                /* stream mode + NAL-bitstream */
-                /* not supported */
-            }
-            else {
-            }
-
-            if (pComponentPrivate->ProcessMode == 0 && pComponentPrivate->H264BitStreamFormat == 0) {
-                /* frame mode + bytestream */
-                pComponentPrivate->pPVCapabilityFlags->iOMXComponentUsesFullAVCFrames = OMX_TRUE;
-            }
-            else if (pComponentPrivate->ProcessMode == 0 && pComponentPrivate->H264BitStreamFormat >= 1) {
-                /* frame mode + NAL-bitstream */
-                pComponentPrivate->pPVCapabilityFlags->iOMXComponentUsesFullAVCFrames = OMX_TRUE;
-            }
-            else if (pComponentPrivate->ProcessMode == 1 && pComponentPrivate->H264BitStreamFormat == 0) {
-                /* stream mode + bytestream */
-                pComponentPrivate->pPVCapabilityFlags->iOMXComponentUsesFullAVCFrames = OMX_FALSE;
-            }
-            else if (pComponentPrivate->ProcessMode == 1 && pComponentPrivate->H264BitStreamFormat >= 1) {
-                /* stream mode + NAL-bitstream */
-                /* not supported */
-            }
-            else {
-            }
-#endif
             /* Set default deblocking value for default format MPEG4 */
             OMX_CONF_INIT_STRUCT(pComponentPrivate->pDeblockingParamType, OMX_PARAM_DEBLOCKINGTYPE, pComponentPrivate->dbg);
             pComponentPrivate->pDeblockingParamType->nPortIndex = VIDDEC_OUTPUT_PORT; 
