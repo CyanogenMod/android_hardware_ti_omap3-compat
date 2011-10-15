@@ -59,8 +59,8 @@ ifeq ($(DVFS_ENABLED),1)
 TI_OMX_CFLAGS += -DDVFS_ENABLED
 endif
 
-# Required for Motorola Defy Codecs
-ifeq ($(TARGET_BOOTLOADER_BOARD_NAME),jordan)
+# Required for Motorola Defy, Cliq2 & DroidX Codecs
+ifeq ($(TARGET_USE_OMX_RECOVERY),true)
 TI_OMX_CFLAGS += -DMOTO_FORCE_RECOVERY
 endif
 
