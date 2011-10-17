@@ -25,7 +25,7 @@ LOCAL_MODULE_TAGS := optional
 # Required for Motorola Defy, Cliq2 & DroidX Codecs
 # kernel/arch/arm/plat-omap/include/dspbridge/wcdioctl.h
 ifeq ($(TARGET_USE_OMX_RECOVERY),true)
-TI_OMX_CFLAGS += -DMOTO_FORCE_RECOVERY
+LOCAL_CFLAGS += -DMOTO_FORCE_RECOVERY
 endif
 
 include $(BUILD_SHARED_LIBRARY)
