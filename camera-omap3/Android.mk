@@ -48,7 +48,7 @@ LOCAL_CFLAGS += -O0 -g3 -fpic -fstrict-aliasing -DIPP_LINUX -D___ANDROID___ -DHA
 # Required for Motorola Defy, Cliq2 & DroidX
 # kernel/arch/arm/plat-omap/include/dspbridge/wcdioctl.h
 ifeq ($(TARGET_USE_OMX_RECOVERY),true)
-TI_OMX_CFLAGS += -DMOTO_FORCE_RECOVERY
+LOCAL_CFLAGS += -DMOTO_FORCE_RECOVERY
 endif
 
 LOCAL_SHARED_LIBRARIES += \
