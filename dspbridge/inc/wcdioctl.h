@@ -450,7 +450,7 @@ typedef union {
 
 #ifndef RES_CLEANUP_DISABLE
 #define CMD_MGR_RESOUCES_OFFSET         (CMD_MGR_BASE_OFFSET + 5)
-#define CMD_MGR_END_OFFSET              CMD_MGR_FORCE_RESOUCES_OFFSET
+#define CMD_MGR_END_OFFSET              CMD_MGR_RESOUCES_OFFSET
 #else
 #define CMD_MGR_END_OFFSET              CMD_MGR_WAIT_OFFSET
 #endif
