@@ -26,6 +26,20 @@
 #include <sys/mman.h>
 #include "v4l2_utils.h"
 
+#ifdef USE_CID_ROTATE_34
+#undef V4L2_CID_ROTATE
+#undef V4L2_CID_BG_COLOR
+#undef V4L2_CID_LASTP1
+#define V4L2_CID_ROTATE     (V4L2_CID_BASE+34)
+#define V4L2_CID_BG_COLOR   (V4L2_CID_BASE+35)
+#define V4L2_CID_LASTP1     (V4L2_CID_BASE+38)
+
+#elif (V4L2_CID_ROTATE == (V4L2_CID_BASE+32))
+#warning -------------------------------------------------------------
+#warning Please double check the deprecated V4L2_CID_ROTATE(+32) ioctl
+#warning -------------------------------------------------------------
+#endif
+
 #define LOG_FUNCTION_NAME    LOGV("%s: %s",  __FILE__, __FUNCTION__);
 
 #ifndef LOGE
@@ -168,7 +182,7 @@ void v4l2_overlay_dump_state(int fd)
 
 static void error(int fd, const char *msg)
 {
-  LOGE("Error = %s from %s", strerror(errno), msg);
+  LOGE("Error %d = %s from %s", errno, strerror(errno), msg);
 #ifdef OVERLAY_DEBUG
   v4l2_overlay_dump_state(fd);
 #endif
@@ -179,7 +193,10 @@ static int v4l2_overlay_ioctl(int fd, int req, void *arg, const char* msg)
     int ret;
     ret = ioctl(fd, req, arg);
     if (ret < 0) {
-        error(fd, msg);
+        if (req == V4L2_CID_ROTATE && errno == EINVAL)
+            LOGW("Error %d from %s (wrong ioctl ?)", errno, msg);
+        else
+            error(fd, msg);
         return -1;
     }
     return 0;
@@ -374,6 +391,14 @@ int v4l2_overlay_set_rotation(int fd, int degree, int step)
     ctrl.id = V4L2_CID_ROTATE;
     ctrl.value = degree;
     ret = v4l2_overlay_ioctl(fd, VIDIOC_S_CTRL, &ctrl, "set rotation");
+
+#ifndef USE_CID_ROTATE_34
+    // this ioctl constant is known to be buggy (V4L2_CID_BASE+32 or +34)
+    if (ret < 0 && errno == EINVAL && V4L2_CID_ROTATE == V4L2_CID_BASE+32) {
+        ctrl.id = V4L2_CID_ROTATE+2;
+        ret = v4l2_overlay_ioctl(fd, VIDIOC_S_CTRL, &ctrl, "set rotation");
+    }
+#endif
 
     return ret;
 }

@@ -23,4 +23,9 @@ LOCAL_SHARED_LIBRARIES := liblog libcutils
 LOCAL_SRC_FILES := v4l2_utils.c overlay.cpp
 LOCAL_MODULE := overlay.omap3
 LOCAL_MODULE_TAGS := optional
+
+ifeq ($(BOARD_USE_CID_ROTATE_34),true)
+LOCAL_CFLAGS += -DUSE_CID_ROTATE_34
+endif
+
 include $(BUILD_SHARED_LIBRARY)
