@@ -23,4 +23,9 @@ LOCAL_SHARED_LIBRARIES := liblog libcutils
 LOCAL_SRC_FILES := v4l2_utils.c overlay.cpp
 LOCAL_MODULE := overlay.omap3
 LOCAL_MODULE_TAGS := optional
+
+ifeq ($(BOARD_DEFY_MODEL), DEFY_GINGER)
+LOCAL_CFLAGS += -DKERNEL_2010
+endif
+
 include $(BUILD_SHARED_LIBRARY)
