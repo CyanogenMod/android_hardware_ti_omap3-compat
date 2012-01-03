@@ -4163,11 +4163,13 @@ void CalculateBufferSize(OMX_PARAM_PORTDEFINITIONTYPE* pCompPort, VIDENC_COMPONE
             pCompPort->nBufferSize = pCompPort->format.video.nFrameWidth *
                                      pCompPort->format.video.nFrameHeight * 1.5;
         }
+#ifdef WVGA_BUFFERS
         else if (pCompPort->format.video.eColorFormat == OMX_COLOR_FormatYCbYCr)
         {
             pCompPort->nBufferSize = pCompPort->format.video.nFrameWidth *
                                     pCompPort->format.video.nFrameHeight * 2.2;
         }
+#endif
         else {
             pCompPort->nBufferSize = pCompPort->format.video.nFrameWidth *
                                      pCompPort->format.video.nFrameHeight * 2;
