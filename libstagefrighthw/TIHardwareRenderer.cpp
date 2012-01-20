@@ -35,7 +35,8 @@ TIHardwareRenderer::TIHardwareRenderer(
         const sp<ISurface> &surface,
         size_t displayWidth, size_t displayHeight,
         size_t decodedWidth, size_t decodedHeight,
-        OMX_COLOR_FORMATTYPE colorFormat)
+        OMX_COLOR_FORMATTYPE colorFormat,
+        int32_t rotationDegrees)
     : mISurface(surface),
       mDisplayWidth(displayWidth),
       mDisplayHeight(displayHeight),
@@ -55,8 +56,24 @@ TIHardwareRenderer::TIHardwareRenderer(
         return;
     }
 
+    switch(rotationDegrees) {
+        case 90:
+            mRotationDegrees = OVERLAY_TRANSFORM_ROT_90;
+            break;
+        case 180:
+            mRotationDegrees = OVERLAY_TRANSFORM_ROT_180;
+            break;
+        case 270:
+            mRotationDegrees = OVERLAY_TRANSFORM_ROT_270;
+            break;
+        case 0:
+        default:
+            mRotationDegrees = 0;
+            break;
+    }
+
     sp<OverlayRef> ref = mISurface->createOverlay(
-            mDecodedWidth, mDecodedHeight, OVERLAY_FORMAT_CbYCrY_422_I, 0);
+            mDecodedWidth, mDecodedHeight, OVERLAY_FORMAT_CbYCrY_422_I, mRotationDegrees);
 
     if (ref.get() == NULL) {
         LOGE("Unable to create the overlay!");

@@ -35,7 +35,8 @@ public:
             const sp<ISurface> &surface,
             size_t displayWidth, size_t displayHeight,
             size_t decodedWidth, size_t decodedHeight,
-            OMX_COLOR_FORMATTYPE colorFormat);
+            OMX_COLOR_FORMATTYPE colorFormat,
+            int32_t rotationDegrees);
 
     virtual ~TIHardwareRenderer();
 
@@ -55,6 +56,7 @@ private:
     Vector<void *> mOverlayAddresses;
     bool mIsFirstFrame;
     size_t mIndex;
+    int32_t mRotationDegrees;
 
     TIHardwareRenderer(const TIHardwareRenderer &);
     TIHardwareRenderer &operator=(const TIHardwareRenderer &);
