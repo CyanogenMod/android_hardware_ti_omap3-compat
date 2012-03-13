@@ -682,7 +682,7 @@ static int overlay_commit(struct overlay_control_device_t *dev,
     LOGI("Position/X%d/Y%d/W%d/H%d\n", data->posX, data->posY, data->posW,
          data->posH);
     LOGI("Adjusted Position/X%d/Y%d/W%d/H%d\n", stage->posX, stage->posY,
-         stage->posW, data->posH);
+         stage->posW, stage->posH);
     LOGI("Rotation/%d\n", stage->rotation );
 
     if ((ret = disable_streaming_locked(shared, fd)))
