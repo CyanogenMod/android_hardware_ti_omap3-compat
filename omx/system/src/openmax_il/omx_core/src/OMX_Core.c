@@ -357,41 +357,23 @@ OMX_ERRORTYPE TIOMX_FreeHandle (OMX_HANDLETYPE hComponent)
         goto EXIT;
     }
 
-    int refIndex = 0, handleIndex = 0, shiftIndex=0;
-    for (refIndex=0; refIndex < MAX_TABLE_SIZE; refIndex++) {
-        for (handleIndex=0; handleIndex < componentTable[refIndex].refCount; handleIndex++){
+    int refIndex = 0, handleIndex = 0;
+    for (refIndex = 0; refIndex < MAX_TABLE_SIZE; refIndex++) {
+        ComponentTable *table = &componentTable[refIndex];
+
+        for (handleIndex = 0; handleIndex < table->refCount; handleIndex++) {
             /* get the position for the component in the table */
-            if (componentTable[refIndex].pHandle[handleIndex] == hComponent){
-                LOGD("Found matching pHandle(%p) at index %d with refCount %d",
-                      hComponent, refIndex, componentTable[refIndex].refCount);
-                if (componentTable[refIndex].refCount > 1) {
-                    /*There is more than one instance of the same component. The
-                     * instance to free can be ahead of the last one created, so the rest of the
-                     * instances will be shifted in the array*/
-                    if (handleIndex < componentTable[refIndex].refCount-1)
-                    {
-                        /*This instance is not the last one created */
-                        for (shiftIndex=handleIndex; shiftIndex < componentTable[refIndex].refCount;shiftIndex++)
-                        {
-                            if (componentTable[refIndex].pHandle[shiftIndex])
-                            {
-                                componentTable[refIndex].pHandle[shiftIndex]= componentTable[refIndex].pHandle[shiftIndex+1];
-                                componentTable[refIndex].pHandle[shiftIndex+1] = NULL;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        /*This instance is the last one created */
-                        componentTable[refIndex].pHandle[handleIndex] = NULL;
-                    }
-                    componentTable[refIndex].refCount -= 1;
+            if (table->pHandle[handleIndex] == hComponent) {
+                LOGD("Found matching pHandle(%p) at component %d with refCount %d, handle index %d",
+                      hComponent, refIndex, table->refCount, handleIndex);
+
+                while (handleIndex < table->refCount && handleIndex < (MAX_CONCURRENT_INSTANCES - 1)) {
+                    table->pHandle[handleIndex] = table->pHandle[handleIndex + 1];
+                    handleIndex++;
                 }
-                else
-                {
-                    componentTable[refIndex].refCount -= 1;
-                    componentTable[refIndex].pHandle[handleIndex] = NULL;
-                }
+                table->refCount -= 1;
+                table->pHandle[table->refCount] = NULL;
+
                 dlclose(pModules[i]);
                 pModules[i] = NULL;
                 free(pComponents[i]);
